@@ -9,17 +9,15 @@
  */
 
 //
-// Sass for the "sketch" notion of the px-datetime-range-panel component
+// Sass for the "sketch" notion of the px-rangepicker component
 //
 // @author
 //
 
 /*
 THIS FILE SHOULD CONTAIN ONLY ABSTRACT/'SKETCH' THEME RULES, NOT SPECIFIC TO PREDIX BRANDING
-Predix branding rules go in px-datetime-range-panel-predix.scss, not in this file.
+Predix branding rules go in px-rangepicker-predix.scss, not in this file.
 */
-
-
 
 // Generic
 @import "px-normalize-design/_generic.normalize.scss";
@@ -30,29 +28,65 @@ Predix branding rules go in px-datetime-range-panel-predix.scss, not in this fil
 @import "px-flexbox-design/_base.flexbox.scss";
 @import "px-viewport-design/_base.viewport.scss";
 
-
-
-
-
+// Object
+// // $inuit-enable-btn--primary        : true;
+// // $inuit-enable-btn--disabled        : true;
+// // $inuit-enable-btn--bare           : true;
+// //
+// // @import "px-buttons-design/_objects.buttons.scss";
+// @import "px-list-bare-design/_objects.list-bare.scss";
 
 // Component
-.circle {
-  cursor: pointer;
-  user-select: none;
-  box-sizing: content-box; /* Even though we use shadow DOM in this component, Safari insists on bleeding styles through from outside, so reset the resetting of this */
-  border: 1px black dashed;
-  font-size: 2rem;
-  text-align: center;
-  padding: 1.25rem .4rem .4rem .4rem;
-  border-radius: 50%;
+:host {
+  text-align: left;
 }
-.counter {
+
+:host[hidden] {
+  visibility: hidden;
+}
+
+.btn--bare{
+  &:hover, &:focus {
+    outline: none;
+  }
+}
+
+.rangepicker__box {
+  position: fixed;
+  top: calculateRem(60px);
+  left: calculateRem(55px);
   display: inline-block;
-  min-width: 6.5rem;
-  height: 3rem;
+  z-index: 1;
+  border: 1px solid;
+  border-radius: 3px;
+  // FIXME Do we need this media query? RP break early because of it. Need on when it is smaller
+  @include media-query(lap-and-up) {
+    position: absolute;
+    top: calculateRem(40px);
+    left: 0;
+  }
+}
+
+.border--top {
+  border-top: 1px solid;
+}
+
+.border--left {
+  border-left: 1px solid;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 
 // Trumps
-@import "inuit-clearfix/_trumps.clearfix.scss";
-@import "px-spacing-responsive-design/_trumps.spacing-responsive.scss";
-@import "px-widths-responsive-design/_trumps.widths-responsive.scss";
+$inuit-enable-margins--small      : true;
+$inuit-enable-margins--none       : true;
+$inuit-enable-paddings--small     : true;
+$inuit-enable-paddings--large     : true;
+
+@import "px-spacing-design/_trumps.spacing.scss";
