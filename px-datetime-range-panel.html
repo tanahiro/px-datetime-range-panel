@@ -158,9 +158,9 @@ Rangepicker modal component.
     ],
     listeners:{
       /**
-       * Listener for the button clicks in px-date-time-buttons
+       * Listener for the button clicks in px-datetime-buttons
        */
-      'date-time-button':'_dateTimeButtons'
+      'datetime-button-clicked':'_dateTimeButtons'
     },
     behaviors: [validate],
     ready: function() {
@@ -226,7 +226,7 @@ Rangepicker modal component.
       this.fire('px-submit-range');
     },
     /**
-     * catching event from px-date-time-buttons and calls appropriate local function
+     * catching event datetime-button-clicked and calls appropriate local function
      */
     _dateTimeButtons:function(e){
       var normalizedEvent = Polymer.dom(e);
