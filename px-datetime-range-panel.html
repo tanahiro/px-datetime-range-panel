@@ -162,40 +162,27 @@ Rangepicker modal component.
       this.$.from.addEventListener('px-date-selected', fromHandler);
       this.$.to.addEventListener('px-date-selected', toHandler);
       this.addEventListener('px-preset-selected', presetHandler);
-
-  /*    this.$.rangepickerModal.addEventListener('px-preset-selected', function(e) {
-        var presetStartDateTime = e.detail.startDateTime;
-        var presetEndDateTime = e.detail.endDateTime;
-
-        if(self.isUtc) {
-          if(!self.$.dateRangePicker.secondRangeDate){
-            self.$.dateRangePicker.secondRangeDate = moment.utc(presetEndDateTime);
-          }
-          self.set('from', moment.utc(presetStartDateTime));
-          self.set('to', moment.utc(presetEndDateTime));
-        }
-        else {
-          if(!self.$.dateRangePicker.secondRangeDate){
-            self.$.dateRangePicker.secondRangeDate = moment(presetEndDateTime);
-          }
-          self.set('from', moment(presetStartDateTime));
-          self.set('to', moment(presetEndDateTime));
-        }
-        self.$.dateRangePicker._resetVisibleCalendars();
-      });*/
     },
 
     _presetSelected: function(e) {
       var start = moment(e.detail.startDateTime),
           end = moment(e.detail.endDateTime);
 
-      this.$.from.fromMoment = start;
-      this.$.from.toMoment = end;
-      this.$.to.fromMoment = start;
-      this.$.to.toMoment = end;
+      //show appropriate month
+      this.$.from._momentBaseDate = start.clone();
+      if(end.isAfter(start.clone().add(1, 'months'), 'month')) {
+        this.$.to._momentBaseDate = end.clone();
+      } else {
+        this.$.to._momentBaseDate = start.clone().add(1, 'months');
+      }
 
-      this.set('fromMoment', start);
-      this.set('toMoment', end);
+      this.$.from.fromMoment = start.clone();
+      this.$.from.toMoment = end.clone();
+      this.$.to.fromMoment = start.clone();
+      this.$.to.toMoment = end.clone();
+
+      this.set('fromMoment', start.clone());
+      this.set('toMoment', end.clone());
 
       this._setRangeFromMoment();
     },
@@ -217,6 +204,9 @@ Rangepicker modal component.
         this._resetRange(this);
         this._resetRange(this.$.to);
         this._resetRange(this.$.from);
+      }
+      if(!this.hidePresets) {
+        this.$$('px-datetime-presets').selectedItem = null;
       }
 
       //nothing selected, assume it's going to be the end date
@@ -259,6 +249,9 @@ Rangepicker modal component.
         this._resetRange(this);
         this._resetRange(this.$.from);
         this._resetRange(this.$.to);
+      }
+      if(!this.hidePresets) {
+        this.$$('px-datetime-presets').selectedItem = null;
       }
 
       //nothing selected, assume it's going to be the end date

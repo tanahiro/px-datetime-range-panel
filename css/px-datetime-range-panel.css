@@ -620,8 +620,8 @@ a {
   -webkit-align-self: stretch;
       -ms-flex-item-align: stretch;
           align-self: stretch;
-  background-color: #e4e4ea;
-  width: 2px; }
+  background-color: #d1d0d8;
+  width: 1px; }
 
 .rangepicker__box__calendar {
   margin: 0.6666666667rem; }
