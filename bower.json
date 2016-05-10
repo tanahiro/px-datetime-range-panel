@@ -17,12 +17,11 @@
         "moment": "~2.10.6",
         "polymer": "~1.4.0",
         "px-theme": "https://github.com/PredixDev/px-theme.git#~0.7.0",
-        "px-calendar":"https://github.com/PredixDev/px-calendar.git",
-        "px-datetime-common": "https://github.com/PredixDev/px-datetime-common.git"
+        "px-calendar-picker":"https://github.com/PredixDev/px-calendar-picker.git#~0.1.0",
+        "px-datetime-common": "https://github.com/PredixDev/px-datetime-common.git#~0.0.1"
     },
     "devDependencies": {
         "iron-component-page" : "PolymerElements/iron-component-page#~v1.1.0",
-
         "px-starter-kit-design": "https://github.com/PredixDev/px-starter-kit-design.git#~0.4.9"
     }
 }

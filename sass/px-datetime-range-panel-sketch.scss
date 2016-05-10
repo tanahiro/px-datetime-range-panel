@@ -67,6 +67,16 @@ Predix branding rules go in px-rangepicker-predix.scss, not in this file.
   }
 }
 
+.divider {
+  align-self: stretch;
+  background-color: $gray3;
+  width: 2px;
+}
+
+.rangepicker__box__calendar {
+  margin: $inuit-base-spacing-unit--small;
+}
+
 .border--top {
   border-top: 1px solid;
 }

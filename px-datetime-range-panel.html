@@ -1,10 +1,9 @@
 <link rel="import" href="../polymer/polymer.html"/>
-<link rel="import" href="../px-datetime-common/px-time-rangepicker.html"/>
-<link rel="import" href="../px-calendar/px-date-rangepicker.html"/>
+<link rel="import" href="../px-calendar-picker/px-calendar-picker.html"/>
 <link rel="import" href="../px-datetime-common/px-datetime-presets.html"/>
 <link rel="import" href="../px-datetime-common/px-datetime-buttons.html"/>
-
-<script src="../moment/moment.js"></script>
+<link rel="import" href="../px-datetime-common/px-datetime-imports.html"/>
+<link rel="import" href="../px-datetime-common/px-datetime-range-behavior.html"/>
 
 <!--
 Rangepicker modal component.
@@ -19,36 +18,33 @@ Rangepicker modal component.
   <template>
     <div class=overlay></div>
     <div id="rangepickerModal" class="rangepicker__box">
-      <div class="flex flex--wrap">
-        <div>
-          <px-date-rangepicker
-            id="dateRangePicker"
-            class="u-pt+"
-            from-date="{{from}}"
-            to-date="{{to}}"
-            first-range-date="{{firstRangeDate}}"
-            second-range-date="{{secondRangeDate}}"
-            is-utc="{{isUtc}}"
-            allow-future-dates="{{allowFutureDates}}">
-          </px-date-rangepicker>
-          <px-time-rangepicker
-            class="border--top u-p+"
-            id="timeRangePicker"
-            is-utc="{{isUtc}}"
-            from-time="{{from}}"
-            to-time="{{to}}"
-            first-range-date="{{firstRangeDate}}"
-            second-range-date="{{secondRangeDate}}"
-            is-submit-button-valid="{{isSubmitButtonValid}}">
-          </px-time-rangepicker>
+      <div class="flex">
+        <div class="flex--item rangepicker__box__calendar">
+          <px-calendar-picker
+          id="from"
+          hide-next-button="{{_areConsecutiveMonth(fromBaseDate, toBaseDate)}}"
+          is-utc="{{isUtc}}"
+          allow-future-dates="{{allowFutureDates}}"
+          base-date="{{fromBaseDate}}">
+          </px-calendar-picker>
         </div>
-        <template is="dom-if" if="{{presetRanges}}">
+        <template is="dom-if" if="{{!_areConsecutiveMonth(fromBaseDate, toBaseDate)}}">
+          <div class="divider flex--item">
+          </div>
+        </template>
+        <div class="flex--item rangepicker__box__calendar">
+          <px-calendar-picker
+            id="to"
+            is-utc="{{isUtc}}"
+            hide-previous-button="{{_areConsecutiveMonth(fromBaseDate, toBaseDate)}}"
+            allow-future-dates="{{allowFutureDates}}"
+            base-date="{{toBaseDate}}">
+          </px-calendar-picker>
+        </div>
+        <template is="dom-if" if="{{!hidePresets}}">
           <px-datetime-presets id="presets" class="flex flex--col border--left u-p+" preset-ranges="{{presetRanges}}">
           </px-datetime-presets>
         </template>
-      </div>
-      <div class="flex flex--right border--top u-p-">
-        <px-datetime-buttons is-submit-button-valid="[[isSubmitButtonValid]]"></px-datetime-buttons>
       </div>
     </div>
   </template>
@@ -58,43 +54,54 @@ Rangepicker modal component.
   Polymer({
 
     is: 'px-datetime-range-panel',
+    behaviors: [pxDatetimeRangeBehavior],
 
     properties: {
 
       /**
-       * Moment object start date & time for range picker
+       * (optional)
+       *
+       * Reflects the date currently used by the 'from' calendar to determine what it should
+       * be showing, i.e what month, year or year range. ISO8601 string
+       *
+       * @default 1 month before now
        */
-      from: {
-        type: Object,
-        notify: true
+      fromBaseDate: {
+        type: String,
+        value: function() { return moment().subtract(1,'months').toISOString();},
+        observer: '_fromBaseDateChanged'
       },
-
-      /**
-       * Moment object end date & time for range picker
-       */
-      to: {
-        type: Object,
-        notify: true
-      },
-
       /**
        * (optional)
        *
-       * Set this attribute when you do want to allow future dates in the date range picker.
+       * Reflects the date currently used by the 'to' calendar to determine what it should
+       * be showing, i.e what month, year or year range. ISO8601 string
        *
-       * If not set, then future dates will be disabled and unclickable in the date picker.
-       *
-       * Note: this only affects the visual calendar date picker, users can always type in dates/times or choose times that are in the future.
+       * @default now
        */
-      allowFutureDates: {
+      toBaseDate: {
+        type: String,
+        observer: '_toBaseDateChanged'
+      },
+      /**
+       * True if the modal is hidden.  Must be declared as a property to reference (below) in IE 10.
+       * @private
+       */
+      hidden: {
+        type: Boolean
+      },
+      /**
+       * (optional)
+       * If set the presets won't be shown
+       */
+      hidePresets: {
         type: Boolean,
         value: false
       },
-
       /**
        * (optional)
        *
-       * The preset date/time ranges to be displayed.  If not set, will have no presets displayed.
+       * The preset date/time ranges to be displayed.
        *
        *```
        *   [
@@ -111,70 +118,54 @@ Rangepicker modal component.
        *   ]
        * ```
        *
-       * @default no presets
+       * @default Today + Yesterday + Last 7 Days + This Month + Last Month
        */
-      presetRanges: Object,
-
-      /**
-       * True if the modal is hidden.  Must be declared as a property to reference (below) in IE 10.
-       * @private
-       */
-      hidden: Boolean,
-      /**
-       * A flag that tells us whether the Submit/Apply button is valid, and should be active.
-       * @private
-       */
-      isSubmitButtonValid: {
-        type: Boolean,
-        value: true,
-        notify: true
-      },
-      firstRangeDate: {
+      presetRanges: {
         type: Object,
-        notify: true
-      },
-      /**
-       * Moment object end date & time
-       */
-      secondRangeDate: {
-        type: Object,
-        notify: true
-      },
-      /**
-       * (optional)
-       *
-       * By default, the rangepicker will display the time in your browser's timezone.  If you add
-       * the is-utc attribute on px-rangepicker, it will display the time as a UTC (GMT timezone) time.
-       *
-       * @default false
-       */
-      isUtc: {
-        type: Boolean,
-        value: false
+        value: function() {
+          var now = moment();
+          return [
+            {
+              "displayText": "Today",
+              "startDateTime": now,
+              "endDateTime": now
+            },
+            {
+              "displayText": "Yesterday",
+              "startDateTime": now.clone().subtract(1, 'day'),
+              "endDateTime": now.clone().subtract(1, 'day')
+            },
+            {
+              "displayText": "Last 7 Days",
+              "startDateTime": now.clone().subtract(7, 'days'),
+              "endDateTime": now
+            },
+            {
+              "displayText": "This Month",
+              "startDateTime": now.clone().startOf('month'),
+              "endDateTime": now.clone().endOf('month')
+            },
+            {
+              "displayText": "Last Month",
+              "startDateTime": now.clone().subtract(1, 'months').startOf('month'),
+              "endDateTime": now.clone().subtract(1, 'months').endOf('month')
+            }
+          ]
+        }
       }
     },
-    observers: [
-      '_submitButtonState(isSubmitButtonValid)'
-    ],
-    listeners:{
-      /**
-       * Listener for the button clicks in px-datetime-buttons
-       */
-      'datetime-button-clicked':'_dateTimeButtons'
-    },
-    behaviors: [validate],
     ready: function() {
-      var self = this;
+      var fromHandler = this._fromPicked.bind(this),
+          toHandler = this._toPicked.bind(this),
+          presetHandler = this._presetSelected.bind(this);
 
-      this.$.rangepickerModal.addEventListener('px-preset-selected', function(e) {
+      this.$.from.addEventListener('px-date-selected', fromHandler);
+      this.$.to.addEventListener('px-date-selected', toHandler);
+      this.addEventListener('px-preset-selected', presetHandler);
+
+  /*    this.$.rangepickerModal.addEventListener('px-preset-selected', function(e) {
         var presetStartDateTime = e.detail.startDateTime;
         var presetEndDateTime = e.detail.endDateTime;
-
-        /* px-date-rangepicker observer function _updateSelectedRange looks to see if the user has
-         * clicked on a new toRangeDate but not the secondRangeDate. When this is the case, it doesnt
-         * update values. In order to fire off the preset, we have to set the secondRangeDate to some
-         * valid date.
-        */
 
         if(self.isUtc) {
           if(!self.$.dateRangePicker.secondRangeDate){
@@ -191,21 +182,149 @@ Rangepicker modal component.
           self.set('to', moment(presetEndDateTime));
         }
         self.$.dateRangePicker._resetVisibleCalendars();
-      });
+      });*/
     },
-    submitBtnClasses: function(base, submitButtonValid) {
-      return (submitButtonValid) ? base : base + ' btn--disabled';
+
+    _presetSelected: function(e) {
+      var start = moment(e.detail.startDateTime),
+          end = moment(e.detail.endDateTime);
+
+      this.$.from.fromMoment = start;
+      this.$.from.toMoment = end;
+      this.$.to.fromMoment = start;
+      this.$.to.toMoment = end;
+
+      this.set('fromMoment', start);
+      this.set('toMoment', end);
+
+      this._setRangeFromMoment();
+    },
+
+    _resetRange: function(rangeObject) {
+      //order maters
+      rangeObject.toMoment = null;
+      rangeObject.fromMoment = null;
+    },
+
+    _rangeIsSelected: function() {
+      return this.fromMoment && this.toMoment ;
+    },
+
+    _fromPicked: function(event) {
+
+      //reset if needed
+      if(this._rangeIsSelected()) {
+        this._resetRange(this);
+        this._resetRange(this.$.to);
+        this._resetRange(this.$.from);
+      }
+
+      //nothing selected, assume it's going to be the end date
+      if(!this.toMoment && !this.fromMoment) {
+        this.$.from.fromMoment = event.detail;
+        this.set('fromMoment', event.detail);
+      } else {
+
+        if(this.fromMoment) {
+          //range is picked solely on 'from' calendar
+
+          //swap dates if needed
+          if(event.detail.isBefore(this.fromMoment)) {
+
+            this.set('toMoment', this.fromMoment);
+            this.set('fromMoment', event.detail);
+          } else {
+            this.set('toMoment', event.detail);
+          }
+
+          //make sure 'to' calendar is aware of the range as well
+          this.$.to.fromMoment = this.fromMoment;
+          this.$.to.toMoment = this.toMoment;
+        } else {
+          //from moment selected from other calendar. Adjust both calendar so they
+          //display properly
+          this.$.to.toMoment = this.toMoment;
+          this.$.to.fromMoment = event.detail;
+          this.$.from.toMoment = this.toMoment;
+          this.set('fromMoment', event.detail);
+        }
+        this._setRangeFromMoment();
+      }
+    },
+
+    _toPicked: function(event) {
+
+      //reset if needed
+      if(this._rangeIsSelected()) {
+        this._resetRange(this);
+        this._resetRange(this.$.from);
+        this._resetRange(this.$.to);
+      }
+
+      //nothing selected, assume it's going to be the end date
+      if(!this.toMoment && !this.fromMoment) {
+
+          this.$.to.fromMoment = event.detail;
+          this.set('toMoment', event.detail);
+      } else {
+
+        if(this.toMoment) {
+          //range is picked solely on 'to' calendar
+
+          //swap dates if needed
+          if(event.detail.isAfter(this.toMoment)) {
+
+            this.set('fromMoment', this.toMoment);
+            this.set('toMoment', event.detail);
+          } else {
+            this.set('fromMoment', event.detail);
+          }
+          //make sure both calendars reflects the right state
+          this.$.to.toMoment = this.toMoment;
+          this.$.to.fromMoment = this.fromMoment;
+          this.$.from.fromMoment = this.fromMoment;
+          this.$.from.toMoment = this.toMoment;
+        } else {
+          //from moment selected from other calendar. Adjust both calendar so they
+          //display properly
+          this.$.from.toMoment = event.detail;
+          this.$.to.fromMoment = this.$.from.fromMoment;
+          this.$.to.toMoment = event.detail;
+          this.set('toMoment', event.detail);
+        }
+        this._setRangeFromMoment();
+      }
+    },
+
+    _areConsecutiveMonth: function(fromBaseDate, toBaseDate) {
+      if(fromBaseDate && toBaseDate) {
+        return moment(fromBaseDate).isSame(moment(toBaseDate).subtract(1, 'months'), 'month');
+      } else {
+        return false;
+      }
+    },
+
+    _fromBaseDateChanged: function() {
+      //don't allow the 'to' calendar to choose dates before 1 month after 'from' calendar
+      if(this.$.from.isAtSelectionLevel) {
+        this.$.to.blockDatesBefore = moment(this.fromBaseDate).add(1, 'month').startOf('month');
+      }
+    },
+
+    _toBaseDateChanged: function() {
+      //don't allow the 'to' calendar to choose dates before 1 month after 'from' calendar
+      if(this.$.to.isAtSelectionLevel) {
+        this.$.from.blockDatesAfter = moment(this.toBaseDate).subtract(1, 'month').endOf('month');
+      }
     },
     /**
      * Open the modal
      */
     open: function() {
       if(this._isClosed()) {
-        this.$.dateRangePicker._resetVisibleCalendars();
         this.toggleAttribute('hidden', false);
       }
     },
-
     /**
      * Close the modal
      */
@@ -221,22 +340,6 @@ Rangepicker modal component.
     _isClosed: function() {
       return this.hidden;
     },
-
-    _submit: function() {
-      this.fire('px-submit-range');
-    },
-    /**
-     * catching event datetime-button-clicked and calls appropriate local function
-     */
-    _dateTimeButtons:function(e){
-      var normalizedEvent = Polymer.dom(e);
-      if(normalizedEvent.event.detail.action){
-        this._submit();
-      } else {
-        this._closeAndReturnFocus();
-      }
-      e.stopPropagation();
-    }
 
   });
 </script>
