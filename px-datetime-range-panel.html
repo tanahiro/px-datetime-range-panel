@@ -24,7 +24,7 @@ Rangepicker modal component.
           id="from"
           hide-next-button="{{_areConsecutiveMonth(fromBaseDate, toBaseDate)}}"
           is-utc="{{isUtc}}"
-          allow-future-dates="{{allowFutureDates}}"
+          block-future-dates="{{blockFutureDates}}"
           base-date="{{fromBaseDate}}">
           </px-calendar-picker>
         </div>
@@ -37,7 +37,7 @@ Rangepicker modal component.
             id="to"
             is-utc="{{isUtc}}"
             hide-previous-button="{{_areConsecutiveMonth(fromBaseDate, toBaseDate)}}"
-            allow-future-dates="{{allowFutureDates}}"
+            block-future-dates="{{blockFutureDates}}"
             base-date="{{toBaseDate}}">
           </px-calendar-picker>
         </div>
