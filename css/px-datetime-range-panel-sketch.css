@@ -590,21 +590,12 @@ a {
   outline: none; }
 
 .rangepicker__box {
-  position: fixed;
-  top: 4rem;
-  left: 3.6666666667rem;
-  display: inline-block;
-  z-index: 1;
+  position: absolute;
+  top: 0.6666666667rem;
+  background-color: white;
   border: 1px solid;
-  border-radius: 3px; }
-  @media screen and (min-width: 48rem) {
-    .rangepicker__box {
-      position: absolute;
-      top: 2.6666666667rem;
-      left: 0; } }
-
-.divider {
-  border-right: 1px solid #d1d0d8; }
+  border-radius: 3px;
+  z-index: 2; }
 
 .rangepicker__box__calendar {
   margin: 0.6666666667rem; }
@@ -628,6 +619,34 @@ a {
  *
  * `.u-(m|p)(t|r|b|l|h|v)(-|+|0) {}` = utility - margin/padding top/right/bottom/left/horizontal/vertical less/more/none
  */
+/**
+     * Margin helper classes.
+     *
+     * Add margins.
+     */
+.u-m {
+  margin: 1rem !important; }
+
+.u-mt {
+  margin-top: 1rem !important; }
+
+.u-mr {
+  margin-right: 1rem !important; }
+
+.u-mb {
+  margin-bottom: 1rem !important; }
+
+.u-ml {
+  margin-left: 1rem !important; }
+
+.u-mh {
+  margin-right: 1rem !important;
+  margin-left: 1rem !important; }
+
+.u-mv {
+  margin-top: 1rem !important;
+  margin-bottom: 1rem !important; }
+
 /**
      * Add small margins.
      */
@@ -653,6 +672,39 @@ a {
 .u-mv- {
   margin-top: 0.6666666667rem !important;
   margin-bottom: 0.6666666667rem !important; }
+
+/**
+     * Add large margins.
+     */
+.u-m\00002b
+{
+  margin: 1.3333333333rem !important; }
+
+.u-mt\00002b
+{
+  margin-top: 1.3333333333rem !important; }
+
+.u-mr\00002b
+{
+  margin-right: 1.3333333333rem !important; }
+
+.u-mb\00002b
+{
+  margin-bottom: 1.3333333333rem !important; }
+
+.u-ml\00002b
+{
+  margin-left: 1.3333333333rem !important; }
+
+.u-mh\00002b
+{
+  margin-right: 1.3333333333rem !important;
+  margin-left: 1.3333333333rem !important; }
+
+.u-mv\00002b
+{
+  margin-top: 1.3333333333rem !important;
+  margin-bottom: 1.3333333333rem !important; }
 
 /**
      * Remove margins.

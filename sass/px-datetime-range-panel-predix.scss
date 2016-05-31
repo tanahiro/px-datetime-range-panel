@@ -57,6 +57,18 @@ common/abstract rules go in px-datetime-range-panel.scss, not in this file.
   }
 }
 
-.divider {
+.verticalDivider {
   border-right: 1px solid $gray4;
+}
+
+.horizontalDivider {
+  border-top: 1px solid $gray4;
+}
+
+.box__time {
+  --px-datetime-entry-font-size: xx-large;
+}
+
+.largeFont {
+  font-size: xx-large;
 }
