@@ -18,7 +18,6 @@ Rangepicker modal component.
 <dom-module id="px-datetime-range-panel">
   <link rel="import" type="css" href="css/px-datetime-range-panel.css"/>
   <template>
-    <div class=overlay></div>
     <div id="rangepickerModal" class="rangepicker__box inline--flex flex--col">
       <!-- Calendar + time inputs + presets -->
       <div class="flex">
@@ -32,7 +31,7 @@ Rangepicker modal component.
               hide-next-button="{{_areConsecutiveMonth(fromBaseDate, toBaseDate)}}"
               block-future-dates="{{blockFutureDates}}"
               base-date="{{fromBaseDate}}"
-              time-zone="{{timeZone}}">
+              time-zone="[[timeZone]]">
               </px-calendar-picker>
             </div>
             <template is="dom-if" if="{{!_areConsecutiveMonth(fromBaseDate, toBaseDate)}}">
@@ -45,12 +44,12 @@ Rangepicker modal component.
                 hide-previous-button="{{_areConsecutiveMonth(fromBaseDate, toBaseDate)}}"
                 block-future-dates="{{blockFutureDates}}"
                 base-date="{{toBaseDate}}"
-                time-zone="{{timeZone}}">
+                time-zone="[[timeZone]]">
               </px-calendar-picker>
             </div>
           </div>
           <!-- The two time inputs -->
-          <template is="dom-if" if="{{showTime}}">
+          <template is="dom-if" if="{{!hideTime}}">
             <div class="horizontalDivider"></div>
             <div class="flex flex--center u-m">
               <px-datetime-field
@@ -59,9 +58,9 @@ Rangepicker modal component.
                 moment-obj="{{fromMoment}}"
                 hide-icon
                 hide-date
-                show-time
-                time-is-valid="{{_timeIsValid}}"
-                time-format="{{timeFormat}}">
+                is-valid="{{_fromTimeIsValid}}"
+                time-format="{{timeFormat}}"
+                time-zone="[[timeZone]]">
               </px-datetime-field>
               <div class="flex__item--middle largeFont">-</div>
               <px-datetime-field
@@ -70,9 +69,9 @@ Rangepicker modal component.
                 moment-obj="{{toMoment}}"
                 hide-icon
                 hide-date
-                show-time
-                time-is-valid="{{_timeIsValid}}"
-                time-format="{{timeFormat}}">
+                is-valid="{{_toTimeIsValid}}"
+                time-format="{{timeFormat}}"
+                time-zone="[[timeZone]]">
               </px-datetime-field>
             </div>
           </template>
@@ -88,7 +87,7 @@ Rangepicker modal component.
         <div class="flex flex--row--rev u-m-">
           <px-datetime-buttons
             class="flex__item--bottom"
-            is-submit-button-valid="{{_isTimeOk}}"
+            is-submit-button-valid="[[_canApply]]"
             submit-text="Apply">
           </px-datetime-buttons>
         </div>
@@ -118,8 +117,11 @@ Rangepicker modal component.
        * @default 1 month before now
        */
       fromBaseDate: {
-        type: String,
-        value: function() { return moment.tz(moment(), this.timezone).subtract(1,'months').toISOString();},
+        type: Object,
+        notify: true,
+        value: function() {
+          return moment.tz(moment(), this.timezone).subtract(1,'months');
+        },
         observer: '_fromBaseDateChanged'
       },
       /**
@@ -131,7 +133,11 @@ Rangepicker modal component.
        * @default now
        */
       toBaseDate: {
-        type: String,
+        type: Object,
+        notify: true,
+        value: function() {
+          return moment.tz(moment(), this.timezone);
+        },
         observer: '_toBaseDateChanged'
       },
       /**
@@ -208,7 +214,7 @@ Rangepicker modal component.
        * Whether time should be shown
        *
        */
-      showTime: {
+      hideTime: {
         type: Boolean,
         value: false
       },
@@ -220,7 +226,34 @@ Rangepicker modal component.
         type: String,
         value: 'HH:mm:ss A'
       },
+      /**
+       * Whether the moment objects are being set internally (=from this component)
+       *
+       */
+      _internalSet: {
+        type: Boolean,
+        value: false
+      },
+      _fromTimeIsValid: {
+        type: Boolean,
+        value: true
+      },
+      _toTimeIsValid: {
+        type: Boolean,
+        value: true
+      },
+      /**
+       * true if the range currently selected can be applied (right order and time valid)
+       */
+      _canApply: {
+        type: Boolean,
+        computed: '_canApplyButton(hideTime, _fromTimeIsValid, _toTimeIsValid, fromMoment, toMoment)'
+      }
     },
+    observers:[
+      '_fromMomentChanged(fromMoment)',
+      '_toMomentChanged(toMoment)'
+    ],
     ready: function() {
       var fromHandler = this._fromPicked.bind(this),
           toHandler = this._toPicked.bind(this),
@@ -230,17 +263,33 @@ Rangepicker modal component.
       this.$.to.addEventListener('px-date-selected', toHandler);
       this.addEventListener('px-preset-selected', presetHandler);
     },
+    _timeZoneChanged: function() {
+      if(this.fromBaseDate) {
+        this.set('fromBaseDate', moment.tz(this.fromBaseDate, this.timeZone));
+      }
+      else {
+        this.set('fromBaseDate', moment.tz(moment().subtract(1, 'month'), this.timeZone));
+      }
+      if(this.toBaseDate) {
+        this.set('toBaseDate', moment.tz(this.toBaseDate, this.timeZone));
+      }
+      else {
+        this.set('toBaseDate', moment.tz(moment(), this.timeZone));
+      }
+    },
 
     _presetSelected: function(e) {
       var start = moment.tz(e.detail.startDateTime, this.timeZone),
           end = moment.tz(e.detail.endDateTime, this.timeZone);
 
+      this._internalSet = true;
+
       //show appropriate month
-      this.$.from._momentBaseDate = start.clone();
+      this.$.from.baseDate = start.clone();
       if(end.isAfter(start.clone().add(1, 'months'), 'month')) {
-        this.$.to._momentBaseDate = end.clone();
+        this.$.to.baseDate = end.clone();
       } else {
-        this.$.to._momentBaseDate = start.clone().add(1, 'months');
+        this.$.to.baseDate = start.clone().add(1, 'months');
       }
 
       this.$.from.fromMoment = start.clone();
@@ -251,7 +300,7 @@ Rangepicker modal component.
       this.set('fromMoment', this._preserveTime(this.fromMoment, start.clone()));
       this.set('toMoment', this._preserveTime(this.toMoment, end.clone()));
 
-      this._setRangeFromMoment();
+      this._internalSet = false;
     },
 
     _resetRange: function(rangeObject) {
@@ -267,6 +316,8 @@ Rangepicker modal component.
     },
 
     _fromPicked: function(event) {
+
+      this._internalSet = true;
 
       //reset if needed
       if(this._rangeIsSelected()) {
@@ -305,9 +356,12 @@ Rangepicker modal component.
           this.set('fromMoment', this._preserveTime(this.fromMoment, event.detail));
         }
       }
+      this._internalSet = false;
     },
 
     _toPicked: function(event) {
+
+      this._internalSet = true;
 
       //reset if needed
       if(this._rangeIsSelected()) {
@@ -348,17 +402,19 @@ Rangepicker modal component.
           this.set('toMoment', this._preserveTime(this.toMoment, event.detail));
         }
       }
+      this._internalSet = false;
     },
 
     _areConsecutiveMonth: function(fromBaseDate, toBaseDate) {
       if(fromBaseDate && toBaseDate) {
-        return moment.tz(fromBaseDate, this.timeZone).isSame(moment.tz(toBaseDate, this.timeZone).subtract(1, 'months'), 'month');
+        return fromBaseDate.isSame(toBaseDate.clone().subtract(1, 'months'), 'month');
       } else {
         return false;
       }
     },
 
     _fromBaseDateChanged: function() {
+
       //don't allow the 'to' calendar to choose dates before 1 month after 'from' calendar
       if(this.$.from.isAtSelectionLevel) {
         this.$.to.blockDatesBefore = moment.tz(this.fromBaseDate, this.timeZone).add(1, 'month').startOf('month');
@@ -366,33 +422,34 @@ Rangepicker modal component.
     },
 
     _toBaseDateChanged: function() {
+
       //don't allow the 'to' calendar to choose dates before 1 month after 'from' calendar
       if(this.$.to.isAtSelectionLevel) {
         this.$.from.blockDatesAfter = moment.tz(this.toBaseDate, this.timeZone).subtract(1, 'month').endOf('month');
       }
     },
-    /**
-     * Open the modal
-     */
-    open: function() {
-      if(this._isClosed()) {
-        this.toggleAttribute('hidden', false);
+    _fromMomentChanged: function() {
+      //if the change comes from the "outside" synchronize the calendar
+      if(!this._internalSet) {
+
+        this.$.from.fromMoment = this.fromMoment;
+        this.$.to.fromMoment = this.fromMoment;
       }
     },
-    /**
-     * Close the modal
-     */
-    close: function() {
-      this.toggleAttribute('hidden', true);
+    _toMomentChanged: function() {
+      //if the change comes from the "outside" synchronize the calendar
+      if(!this._internalSet) {
+
+        this.$.from.toMoment = this.toMoment;
+        this.$.to.toMoment = this.toMoment;
+    //    this.toBaseDate = this.toMoment;
+      }
     },
 
-    _closeAndReturnFocus: function() {
-      this.close();
-      this.fire('px-modal-close-clicked');
-    },
+    _canApplyButton: function(hideTime, _fromTimeIsValid, _toTimeIsValid, fromMoment, toMoment) {
 
-    _isClosed: function() {
-      return this.hidden;
+      //can apply if range is in the right order and times are valid (or not shown)
+      return this._validateRangeOrder() && (hideTime || (_fromTimeIsValid && _toTimeIsValid));
     }
   });
 </script>

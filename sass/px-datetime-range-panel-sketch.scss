@@ -72,14 +72,6 @@ Predix branding rules go in px-rangepicker-predix.scss, not in this file.
   border-left: 1px solid;
 }
 
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
 // Trumps
 $inuit-enable-margins--small      : true;
 $inuit-enable-margins--none       : true;
