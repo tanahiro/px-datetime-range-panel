@@ -242,12 +242,16 @@ Rangepicker modal component.
         type: Boolean,
         value: true
       },
+      timeIsValid: {
+        type: Boolean,
+        computed: '_getTimeIsValid(_fromTimeIsValid, _toTimeIsValid, hideTime)'
+      },
       /**
        * true if the range currently selected can be applied (right order and time valid)
        */
       _canApply: {
         type: Boolean,
-        computed: '_canApplyButton(hideTime, _fromTimeIsValid, _toTimeIsValid, fromMoment, toMoment)'
+        computed: '_canApplyButton(timeIsValid, fromMoment, toMoment)'
       }
     },
     observers:[
@@ -446,10 +450,14 @@ Rangepicker modal component.
       }
     },
 
-    _canApplyButton: function(hideTime, _fromTimeIsValid, _toTimeIsValid, fromMoment, toMoment) {
+    _canApplyButton: function(timeIsValid, fromMoment, toMoment) {
 
       //can apply if range is in the right order and times are valid (or not shown)
-      return this._validateRangeOrder() && (hideTime || (_fromTimeIsValid && _toTimeIsValid));
+      return this._validateRangeOrder() && timeIsValid;
+    },
+
+    _getTimeIsValid: function(_fromTimeIsValid, _toTimeIsValid, hideTime) {
+      return hideTime || (_fromTimeIsValid && _toTimeIsValid);
     }
   });
 </script>
