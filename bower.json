@@ -1,6 +1,6 @@
 {
     "name": "px-datetime-range-panel",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "main": [
         "px-datetime-range-panel.html"
     ],
@@ -14,15 +14,17 @@
         "test"
     ],
     "dependencies": {
-        "moment": "~2.10.6",
-        "polymer": "~1.4.0",
-        "px-theme": "https://github.com/PredixDev/px-theme.git#~0.7.0",
-        "px-calendar-picker":"https://github.com/PredixDev/px-calendar-picker.git#~0.1.0",
-        "px-datetime-common": "https://github.com/PredixDev/px-datetime-common.git#~0.2.0",
-        "px-datetime-field": "~0.1.0"
+        "polymer": "^1.5.0",
+        "px-theme": "~0.7.0",
+        "px-calendar-picker":"~0.1.0",
+        "px-datetime-common": "~0.3.0",
+        "px-datetime-field": "~0.2.0"
     },
     "devDependencies": {
         "iron-component-page" : "PolymerElements/iron-component-page#~v1.1.0",
         "px-starter-kit-design": "https://github.com/PredixDev/px-starter-kit-design.git#~0.4.9"
-    }
+    },
+    "resolutions": {
+    "polymer": "^1.5.0"
+  }
 }

@@ -35,7 +35,7 @@ Rangepicker modal component.
               </px-calendar-picker>
             </div>
             <template is="dom-if" if="{{!_areConsecutiveMonth(fromBaseDate, toBaseDate)}}">
-              <div class="verticalDivider flex--item">
+              <div id="monthDivider" class="verticalDivider flex--item">
               </div>
             </template>
             <div class="flex--item rangepicker__box__calendar">
@@ -289,12 +289,14 @@ Rangepicker modal component.
       this._internalSet = true;
 
       //show appropriate month
-      this.$.from.baseDate = start.clone();
+      //set 'to' calendar first to avoid blocking the from calendar
       if(end.isAfter(start.clone().add(1, 'months'), 'month')) {
-        this.$.to.baseDate = end.clone();
+        this.set('toBaseDate', end.clone());
       } else {
-        this.$.to.baseDate = start.clone().add(1, 'months');
+        this.set('toBaseDate', start.clone().add(1, 'months'));
       }
+      this.set('fromBaseDate', start.clone());
+
 
       this.$.from.fromMoment = start.clone();
       this.$.from.toMoment = end.clone();
@@ -419,6 +421,12 @@ Rangepicker modal component.
 
     _fromBaseDateChanged: function() {
 
+      //make sure the new base date is at least the month before 'to'
+      if(this.fromBaseDate && this.toBaseDate &&
+        this.fromBaseDate.isSameOrAfter(this.toBaseDate, 'month')) {
+        this.set('fromBaseDate', moment.tz(this.toBaseDate, this.timeZone).subtract(1, 'month'));
+      }
+
       //don't allow the 'to' calendar to choose dates before 1 month after 'from' calendar
       if(this.$.from.isAtSelectionLevel) {
         this.$.to.blockDatesBefore = moment.tz(this.fromBaseDate, this.timeZone).add(1, 'month').startOf('month');
@@ -426,6 +434,12 @@ Rangepicker modal component.
     },
 
     _toBaseDateChanged: function() {
+
+      //make sure the new base date is at least the month after 'from'
+      if(this.fromBaseDate && this.toBaseDate &&
+        this.toBaseDate.isSameOrBefore(this.fromBaseDate, 'month')) {
+        this.set('toBaseDate', moment.tz(this.fromBaseDate, this.timeZone).add(1, 'month'));
+      }
 
       //don't allow the 'to' calendar to choose dates before 1 month after 'from' calendar
       if(this.$.to.isAtSelectionLevel) {
@@ -446,7 +460,6 @@ Rangepicker modal component.
 
         this.$.from.toMoment = this.toMoment;
         this.$.to.toMoment = this.toMoment;
-    //    this.toBaseDate = this.toMoment;
       }
     },
 
