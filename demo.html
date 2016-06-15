@@ -10,12 +10,57 @@
         <!-- Import custom element. Note: see comment about relative paths to dependencies in the *.html file referenced below -->
         <link rel="import" href="px-datetime-range-panel.html"/>
         <link rel="import" href="../px-theme/px-theme.html"/>
+        <style>
+          .properties {
+            margin-top: 400px;
+          }
+        </style>
     </head>
 
     <body>
 
-        <h3>Demo</h3>
+      <h3>Demo</h3>
 
-        <px-datetime-range-panel show-time show-buttons></px-datetime-range-panel>
+      <template id="just-for-demo" is="dom-bind">
+        <px-datetime-range-panel
+          id="panel"
+          hide-time="{{hideTime}}"
+          hide-presets="{{hidePresets}}"
+          show-buttons="{{showButtons}}"
+          time-format="{{timeFormat}}"
+          block-future-dates="{{blockFutureDates}}"
+          range="{{range}}"
+          is-valid="{{isValidd}}">
+        </px-datetime-range-panel>
+        <div class="properties">
+          <h3>Properties</h3>
+          <div>Hide time: <input type="checkbox" checked="{{hideTime::change}}"></input></div>
+          <div>Hide presets: <input type="checkbox" checked="{{hidePresets::change}}"></input></div>
+          <div>Show buttons: <input id="showButtons" type="checkbox" checked="{{showButtons::change}}"></input></div>
+          <div>Block future dates<input type="checkbox" checked="{{blockFutureDates::change}}"></input></div>
+          <div>Time format: <input id="timeFormat" type="text" value="{{timeFormat::input}}"></input></div>
+          <div>presets: <textarea id="textArea" value="{{presetRanges::input}}" style="width:350px; height:230px"></textarea></div>
+          <h3>Readonly Properties</h3>
+          <div>Is Valid: <input type="checkbox" disabled checked="{{isValidd::change}}"></input></div>
+        </div>
+      </template>
+      <script>
+
+      document.addEventListener('WebComponentsReady', function() {
+        var panel = document.getElementById('panel'),
+            textArea = document.getElementById('textArea'),
+            timeFormat = document.getElementById('timeFormat');
+
+            textArea.addEventListener('input', function() {
+              panel.presetRanges = JSON.parse(textArea.value);
+            });
+
+            textArea.value = JSON.stringify(panel.presetRanges, null, 4);
+            showButtons.checked = panel.showButtons;
+            timeFormat.value = panel.timeFormat;
+
+          });
+
+      </script>
     </body>
 </html>
