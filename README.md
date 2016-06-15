@@ -1,6 +1,6 @@
-#THIS COMPONENT IS NOT YET RELEASED. 
+#THIS COMPONENT IS NOT YET RELEASED.
 
-Px-Datetime-Range-Panel
+Px-Datetime-Range-Panel [![Build Status](https://travis-ci.org/PredixDev/px-datetime-range-panel.svg?branch=master)](https://travis-ci.org/PredixDev/px-datetime-range-panel)
 -----------------------------------------------
 
 ## Overview
