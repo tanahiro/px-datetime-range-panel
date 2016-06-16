@@ -21,13 +21,9 @@ $ grunt sass
 
 ### API and examples
 
-From the component's directory
+Read the full API and view the demo [here](https://predixdev.github.io/px-datetime-range-panel).
 
-```
-$ grunt depserve
-```
-
-Starts a local server. Navigate to the root of that server (e.g. http://localhost:8080/) in a browser to open the API documentation page, with link to the "Demo" / working examples.
+The documentation in this repository is supplemental to the official Predix documentation, which is continuously updated and maintained by the Predix documentation team. Go to [http://predix.io](http://predix.io)  to see the official Predix documentation.
 
 ### LiveReload
 
