@@ -14,6 +14,11 @@ Rangepicker modal component.
 
     <px-datetime-range-panel from={{...}} to={{...}}>
     </px-datetime-range-panel>
+
+@element px-datetime-range-panel
+@blurb Element providing solution to date time range panel.
+@homepage index.html
+@demo demo.html
 -->
 <dom-module id="px-datetime-range-panel">
   <link rel="import" type="css" href="css/px-datetime-range-panel.css"/>
@@ -107,8 +112,6 @@ Rangepicker modal component.
     properties: {
 
       /**
-
-
        * (optional)
        *
        * Reflects the date currently used by the 'from' calendar to determine what it should
@@ -197,7 +200,7 @@ Rangepicker modal component.
               "startDateTime": now.clone().subtract(1, 'months').startOf('month'),
               "endDateTime": now.clone().subtract(1, 'months').endOf('month')
             }
-          ]
+          ];
         }
       },
       /**
