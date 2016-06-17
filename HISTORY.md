@@ -1,3 +1,7 @@
+v0.1.3
+==================
+* fixed broken functinoality in demo that didn't show buttons when clicked
+
 v0.1.2
 ==================
 * re-added the @demo tag to element to show demo button, and removed auto_ghp.sh script

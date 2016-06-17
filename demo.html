@@ -52,7 +52,8 @@
       document.addEventListener('WebComponentsReady', function() {
         var panel = document.getElementById('panel'),
             textArea = document.getElementById('textArea'),
-            timeFormat = document.getElementById('timeFormat');
+            timeFormat = document.getElementById('timeFormat'),
+            showButtons = document.getElementById('showButtons');
 
             textArea.addEventListener('input', function() {
               panel.presetRanges = JSON.parse(textArea.value);
