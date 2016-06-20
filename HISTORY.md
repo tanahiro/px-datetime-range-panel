@@ -1,6 +1,10 @@
+v0.1.4
+==================
+* Use local copy of moment.js
+
 v0.1.3
 ==================
-* fixed broken functinoality in demo that didn't show buttons when clicked
+* fixed broken functionality in demo that didn't show buttons when clicked
 
 v0.1.2
 ==================

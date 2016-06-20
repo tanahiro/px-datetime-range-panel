@@ -123,7 +123,7 @@ Rangepicker modal component.
         type: Object,
         notify: true,
         value: function() {
-          return moment.tz(moment(), this.timezone).subtract(1,'months');
+          return Px.moment.tz(Px.moment(), this.timezone).subtract(1,'months');
         },
         observer: '_fromBaseDateChanged'
       },
@@ -139,7 +139,7 @@ Rangepicker modal component.
         type: Object,
         notify: true,
         value: function() {
-          return moment.tz(moment(), this.timezone);
+          return Px.moment.tz(Px.moment(), this.timezone);
         },
         observer: '_toBaseDateChanged'
       },
@@ -183,7 +183,7 @@ Rangepicker modal component.
       presetRanges: {
         type: Object,
         value: function() {
-          var now = moment();
+          var now = Px.moment();
           return [
             {
               "displayText": "Last 7 Days",
@@ -262,22 +262,22 @@ Rangepicker modal component.
     },
     _timeZoneChanged: function() {
       if(this.fromBaseDate) {
-        this.set('fromBaseDate', moment.tz(this.fromBaseDate, this.timeZone));
+        this.set('fromBaseDate', Px.moment.tz(this.fromBaseDate, this.timeZone));
       }
       else {
-        this.set('fromBaseDate', moment.tz(moment().subtract(1, 'month'), this.timeZone));
+        this.set('fromBaseDate', Px.moment.tz(Px.moment().subtract(1, 'month'), this.timeZone));
       }
       if(this.toBaseDate) {
-        this.set('toBaseDate', moment.tz(this.toBaseDate, this.timeZone));
+        this.set('toBaseDate', Px.moment.tz(this.toBaseDate, this.timeZone));
       }
       else {
-        this.set('toBaseDate', moment.tz(moment(), this.timeZone));
+        this.set('toBaseDate', Px.moment.tz(Px.moment(), this.timeZone));
       }
     },
 
     _presetSelected: function(e) {
-      var start = moment.tz(e.detail.startDateTime, this.timeZone),
-          end = moment.tz(e.detail.endDateTime, this.timeZone);
+      var start = Px.moment.tz(e.detail.startDateTime, this.timeZone),
+          end = Px.moment.tz(e.detail.endDateTime, this.timeZone);
 
       this._internalSet = true;
 
@@ -291,7 +291,7 @@ Rangepicker modal component.
       this.set('fromBaseDate', start.clone());
 
       //make sure those presets are allowed
-      var today = moment.tz(moment(), this.timeZone),
+      var today = Px.moment.tz(Px.moment(), this.timeZone),
           startOk = !this.blockFutureDates || (start.isSameOrBefore(today, 'day')),
           endOk = !this.blockFutureDates || (end.isSameOrBefore(today, 'day'));
 
@@ -431,12 +431,12 @@ Rangepicker modal component.
       //make sure the new base date is at least the month before 'to'
       if(!this._internalSet && this.fromBaseDate && this.toBaseDate &&
         this.fromBaseDate.isSameOrAfter(this.toBaseDate, 'month')) {
-        this.set('fromBaseDate', moment.tz(this.toBaseDate, this.timeZone).subtract(1, 'month'));
+        this.set('fromBaseDate', Px.moment.tz(this.toBaseDate, this.timeZone).subtract(1, 'month'));
       }
 
       //don't allow the 'to' calendar to choose dates before 1 month after 'from' calendar
       if(this.$.from.isAtSelectionLevel) {
-        this.$.to.blockDatesBefore = moment.tz(this.fromBaseDate, this.timeZone).add(1, 'month').startOf('month');
+        this.$.to.blockDatesBefore = Px.moment.tz(this.fromBaseDate, this.timeZone).add(1, 'month').startOf('month');
       }
     },
 
@@ -445,12 +445,12 @@ Rangepicker modal component.
       //make sure the new base date is at least the month after 'from'
       if(!this._internalSet && this.fromBaseDate && this.toBaseDate &&
         this.toBaseDate.isSameOrBefore(this.fromBaseDate, 'month')) {
-        this.set('toBaseDate', moment.tz(this.fromBaseDate, this.timeZone).add(1, 'month'));
+        this.set('toBaseDate', Px.moment.tz(this.fromBaseDate, this.timeZone).add(1, 'month'));
       }
 
       //don't allow the 'to' calendar to choose dates before 1 month after 'from' calendar
       if(this.$.to.isAtSelectionLevel) {
-        this.$.from.blockDatesAfter = moment.tz(this.toBaseDate, this.timeZone).subtract(1, 'month').endOf('month');
+        this.$.from.blockDatesAfter = Px.moment.tz(this.toBaseDate, this.timeZone).subtract(1, 'month').endOf('month');
       }
     },
     _fromMomentChanged: function() {
