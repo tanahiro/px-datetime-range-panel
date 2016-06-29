@@ -1,3 +1,7 @@
+v0.2.0
+==================
+* Added blockPastDates
+
 v0.1.4
 ==================
 * Use local copy of moment.js
