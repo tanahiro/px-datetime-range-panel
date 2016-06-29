@@ -35,6 +35,7 @@ Rangepicker modal component.
               id="from"
               hide-next-button="{{_areConsecutiveMonth(fromBaseDate, toBaseDate)}}"
               block-future-dates="{{blockFutureDates}}"
+              block-past-dates="{{blockPastDates}}"
               base-date="{{fromBaseDate}}"
               time-zone="[[timeZone]]">
               </px-calendar-picker>
@@ -48,6 +49,7 @@ Rangepicker modal component.
                 id="to"
                 hide-previous-button="{{_areConsecutiveMonth(fromBaseDate, toBaseDate)}}"
                 block-future-dates="{{blockFutureDates}}"
+                block-past-dates="{{blockPastDates}}"
                 base-date="{{toBaseDate}}"
                 time-zone="[[timeZone]]">
               </px-calendar-picker>
@@ -293,7 +295,9 @@ Rangepicker modal component.
       //make sure those presets are allowed
       var today = Px.moment.tz(Px.moment(), this.timeZone),
           startOk = !this.blockFutureDates || (start.isSameOrBefore(today, 'day')),
-          endOk = !this.blockFutureDates || (end.isSameOrBefore(today, 'day'));
+          endOk = !this.blockFutureDates || (end.isSameOrBefore(today, 'day')),
+          startPastOk = !this.blockPastDates || (start.isSameOrAfter(today, 'day')),
+          endPastOk = !this.blockPastDates || (end.isSameOrAfter(today, 'day'));
 
       //if start is later than today and future dates not allowed don't do anything
       if(startOk) {
@@ -311,6 +315,28 @@ Rangepicker modal component.
           this.$.to.toMoment = today.clone();
           this.set('toMoment', this._preserveTime(this.toMoment, today.clone()));
         }
+      }
+
+      //if start date is earlier than today and past dates not allowed
+      if(startPastOk) {
+        this.$.from.fromMoment = start.clone();
+        this.$.to.fromMoment = start.clone();
+        this.set('fromMoment', this._preserveTime(this.fromMoment, start.clone()));
+      } else {
+        this.$.from.fromMoment = today.clone();
+        this.$.to.fromMoment = today.clone();
+        this.set('fromMoment', this._preserveTime(this.fromMoment, today.clone()));
+      }
+
+      //if end date is earlier than today and past dates not allowed
+      if(endPastOk) {
+        this.$.from.toMoment = end.clone();
+        this.$.to.toMoment = end.clone();
+        this.set('toMoment', this._preserveTime(this.toMoment, end.clone()));
+      } else {
+        this.$.from.toMoment = today.clone();
+        this.$.to.toMoment = today.clone();
+        this.set('toMoment', this._preserveTime(this.toMoment, today.clone()));
       }
 
       this._internalSet = false;
