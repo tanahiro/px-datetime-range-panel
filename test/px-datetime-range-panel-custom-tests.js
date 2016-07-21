@@ -423,9 +423,43 @@ function runCustomTests() {
     });
 
     test('shows appropriate calendars', function() {
-
       assert.isTrue(rangePanel.fromMoment.isSame(startOfMonth, 'day'));
       assert.isTrue(rangePanel.toMoment.isSame(now, 'day'));
+    });
+  });
+
+  suite('select this month presets with future dates blocked doesnt select the whole month', function(done) {
+
+    var now = moment.tz(moment(), rangePanel.timeZone),
+        startOfMonth = now.clone().startOf('month'),
+        endOfMonth = now.clone().endOf('month');
+    suiteSetup(function(done) {
+
+      //set old calendars
+      rangePanel.fromBaseDate = rangePanel._convertISOtoMoment("2011-06-02T00:00:00Z");
+      rangePanel.toBaseDate = rangePanel._convertISOtoMoment("2012-07-11T00:00:00Z");
+
+      rangePanel.blockFutureDates = false;
+      rangePanel.blockPastDates = true;
+
+      flush(function() {
+
+        //now simulate 'this month' preset selection
+        rangePanel.dispatchEvent(new CustomEvent('px-preset-selected',
+                    { 'detail':  {
+                      "displayText": "This Month",
+                      "startDateTime": startOfMonth,
+                      "endDateTime": endOfMonth
+                    }}));
+        flush(function() {
+          done();
+        });
+      });
+    });
+
+    test('shows appropriate calendars', function() {
+      assert.isTrue(rangePanel.fromMoment.isSame(now, 'day'));
+      assert.isTrue(rangePanel.toMoment.isSame(endOfMonth, 'day'));
     });
   });
 };
