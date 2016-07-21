@@ -16,6 +16,15 @@
   <link rel="import" href="../px-demo-snippet/px-demo-snippet.html">
   <link rel="import" href="../polymer-font-awesome/polymer-font-awesome.html">
   <!-- Requires Webcomponents.js polyfill is provided by the page for browsers that don't support html imports -->
+  <style>
+    .container{
+      height: 450px;
+      margin-top: 10px;
+    }
+    .range-panel__demo{
+      position: relative;
+    }
+  </style>
 
   </head>
 
@@ -30,14 +39,8 @@
   		<p >
   			The	<code>px-datetime-range-panel</code> component includes various elements used for structuring responsive layouts.
   		</p>
-      <p >This component allows the user to select a date and time precisely to the second or millisecond.
-      </p>
-      <p >The counter represents when the px-datetime-range-panel event/dateTime property of the
-      range-panel are being fired/updated. The behavior depends on whether the range-panel uses
-      buttons. It is defined as followed:
-      <br>
-      - If it has buttons then it is fired when the user clicks the apply button AND the date/time is valid<br>
-      - If it doesn't have button then it is fired every time a change is made to the date/time AND the date/time is valid
+      <p >This component allows the user to select a date and time range precisely to the second or millisecond.
+        The main use of this component is to be used in the px-rangepicker.
       </p>
   		<div class="flex">
   			<img class="u-mr--" src="https://img.shields.io/travis/PredixDev/px-datetime-range-panel.svg?style=flat-square" alt="Travis" onerror="this.style.display='none'"/>
@@ -65,19 +68,14 @@
             <div class="properties u-ph+ u-pb+ u-mt++ u-mh++" id="properties">
               <p class="epsilon">Properties</p>
               <div class="flex u-mb-">
-                <input id="toggleDate{{indexPlusOne(index)}}" class="toggle__input toggle__input--small" type="checkbox" checked="{{item.hideDate::change}}">
-                <label for$="toggleDate{{indexPlusOne(index)}}" class="toggle__label toggle__label--small"></label>
-                <div class="u-ml-">Hide date</div>
-              </div>
-              <div class="flex u-mb-">
                 <input id="toggleTime{{indexPlusOne(index)}}" class="toggle__input toggle__input--small" type="checkbox" checked="{{item.hideTime::change}}">
                 <label for$="toggleTime{{indexPlusOne(index)}}" class="toggle__label toggle__label--small"></label>
                 <div class="u-ml-">Hide time</div>
               </div>
               <div class="flex u-mb-">
-                <input id="toggleIcon{{indexPlusOne(index)}}" class="toggle__input toggle__input--small" type="checkbox" checked="{{item.hideIcon::change}}">
-                <label for$="toggleIcon{{indexPlusOne(index)}}" class="toggle__label toggle__label--small"></label>
-                <div class="u-ml-">Hide icon</div>
+                <input id="togglePresets{{indexPlusOne(index)}}" class="toggle__input toggle__input--small" type="checkbox" checked="{{item.hidePresets::change}}">
+                <label for$="togglePresets{{indexPlusOne(index)}}" class="toggle__label toggle__label--small"></label>
+                <div class="u-ml-">Hide presets</div>
               </div>
               <div class="flex u-mb-">
                 <input id="toggleButtons{{indexPlusOne(index)}}" class="toggle__input toggle__input--small" type="checkbox" checked="{{item.showButtons::change}}">
@@ -94,24 +92,14 @@
                 <label for$="togglePastDates{{indexPlusOne(index)}}" class="toggle__label toggle__label--small"></label>
                 <div class="u-ml-">Block past dates</div>
               </div>
-              <!-- <div class="u-mb-">Date time input: <input id="dateTime" class="text-input" type="text" placeholder="2016-01-01T01:00:00.000Z" value="{{item.dateTime::input}}" /></div> -->
-              <div class="u-mb-">Date format: <input id="dateFormat" class="text-input" type="text" placeholder="YYYY/MM/DD" value="{{item.dateFormat::input}}" /></div>
-              <div class="u-mb-">Time format: <input id="timeFormat" class="text-input" type="text" placeholder="hh:mm:ss A" value="{{item.timeFormat::input}}" /></div>
-              <div class="u-mb-">Time zone: <input id="timeZone" class="text-input" type="text" placeholder="UTC" value="{{item.timeZone::input}}" /></div>
-              <div class="u-mb-">Show time zone:
-                <div style="width: 100%;">
-                  <px-dropdown id="showTimeZone" value="{{item.showTimeZone}}" display-value="{{item.showTimeZone}}" bound-target="properties">
-                    <px-dropdown-content
-                      items='[
-                        {"key":"one", "val": "none"},
-                        {"key":"two", "val": "dropdown"},
-                        {"key":"three", "val": "extendedDropdown"},
-                        {"key":"four", "val": "text"},
-                        {"key":"five", "val": "abbreviatedText"}]'>
-                    </px-dropdown-content>
-                  </px-dropdown>
-                </div>
+              <div class="flex u-mb-">
+                <input id="toggleHidden{{indexPlusOne(index)}}" class="toggle__input toggle__input--small" type="checkbox" checked="{{item.hidden::change}}">
+                <label for$="toggleHidden{{indexPlusOne(index)}}" class="toggle__label toggle__label--small"></label>
+                <div class="u-ml-">Hidden</div>
               </div>
+              <!-- <div class="u-mb-">Date time input: <input id="dateTime" class="text-input" type="text" placeholder="2016-01-01T01:00:00.000Z" value="{{item.dateTime::input}}" /></div> -->
+              <div class="u-mb-">Time format: <input id="timeFormat{{indexPlusOne(index)}}" class="text-input" type="text" placeholder="hh:mm:ss A" value="{{item.timeFormat::input}}" /></div>
+              <div class="u-mb-">Time zone: <input id="timeZone{{indexPlusOne(index)}}" class="text-input" type="text" placeholder="UTC" value="{{item.timeZone::input}}" /></div>
               <div>More info on date and time format at <a href="http://momentjs.com/docs/#/parsing/string-format/" target="_blank" class="actionable">momentjs</a></div>
             </div>
 
@@ -119,26 +107,19 @@
               <!-- demo -->
               <div class="flex flex--col">
                 <div class="flex__item demo u-ph+ u-pb+ u-mt++">
-                  <br />
-                  <span id="counter"><strong>px-datetime-range-panel-submitted</strong> fired <strong>0</strong> time</span>
-                  <div>
-                    Current dateTime object: <strong>{{item.dateTime}}</strong>
+                  <div class="container">
+                    <px-datetime-range-panel
+                      class="range-panel__demo"
+                      time-format="{{item.timeFormat}}"
+                      show-buttons="{{item.showButtons}}"
+                      block-future-dates="{{item.blockFutureDates}}"
+                      block-past-dates="{{item.blockPastDates}}"
+                      hide-time="{{item.hideTime}}"
+                      time-zone="{{item.timeZone}}"
+                      hidden="{{item.hidden}}"
+                      hide-presets="{{item.hidePresets}}">
+                    </px-datetime-range-panel>
                   </div>
-                  <br />
-                  <px-datetime-range-panel
-                    id="dateTime"
-                    date-time="{{item.dateTime}}"
-                    date-format="{{item.dateFormat}}"
-                    time-format="{{item.timeFormat}}"
-                    show-buttons="{{item.showButtons}}"
-                    block-future-dates="{{item.blockFutureDates}}"
-                    block-past-dates="{{item.blockPastDates}}"
-                    hide-time="{{item.hideTime}}"
-                    hide-date="{{item.hideDate}}"
-                    show-time-zone="{{item.showTimeZone}}"
-                    hide-icon="{{item.hideIcon}}"
-                    time-zone="{{item.timeZone}}">
-                  </px-datetime-range-panel>
                 </div>
                 <div class="flex__item">
                   <px-demo-snippet
@@ -186,51 +167,40 @@
 window.addEventListener('WebComponentsReady', function() {
   var template = document.querySelector('template[is=dom-bind]'),
       year = new Date(),
-      dateTime = "2016-01-01T01:00:00.000Z",
-      dateFormat = ["YYYY/MM/DD","MM/DD/YY","DD/MM/YY"],
       timeFormat = ["hh:mm:ss A","HH:mm:ss.SSS"],
-      showTimeZone = ["text","abbreviatedText","dropdown"],
-      timeZone =["UTC","America/Los_Angeles","America/New_York"];
+      timeZone = ["UTC","America/Los_Angeles","America/New_York"];
+
 
   var optionsArray = [
     {
-      "dateTime":dateTime,
-      "dateFormat":dateFormat[0],
       "timeFormat":timeFormat[0],
       "showButtons":true,
       "blockFutureDates":true,
       "blockPastDates":false,
       "hideTime":false,
-      "hideDate":false,
-      "hideIcon":false,
-      "showTimeZone":showTimeZone[0],
-      "timeZone":timeZone[0]
+      "timeZone":timeZone[0],
+      "hidden":false,
+      "hidePresets":false
     },
     {
-      "dateTime":dateTime,
-      "dateFormat":dateFormat[1],
       "timeFormat":timeFormat[0],
       "showButtons":false,
       "blockPastDates":false,
       "blockFutureDates":false,
-      "hideDate":false,
       "hideTime":true,
-      "hideIcon":false,
-      "showTimeZone":showTimeZone[1],
-      "timeZone":timeZone[1]
+      "timeZone":timeZone[1],
+      "hidden":false,
+      "hidePresets":true
     },
     {
-      "dateTime":dateTime,
-      "dateFormat":dateFormat[2],
       "timeFormat":timeFormat[1],
       "showButtons":false,
       "blockFutureDates":true,
       "blockPastDates":false,
-      "hideDate":true,
-      "hideTime":false,
-      "hideIcon":false,
-      "showTimeZone":showTimeZone[2],
-      "timeZone":timeZone[2]
+      "hideTime":true,
+      "timeZone":timeZone[2],
+      "hidden":false,
+      "hidePresets":false
     }
   ];
 
@@ -243,7 +213,7 @@ window.addEventListener('WebComponentsReady', function() {
     template.selected = "0";
     template.optionsArray = optionsArray;
     template.indexPlusOne = indexPlusOne;
-    pull
+    template.year = year;
 
 });
 </script>
