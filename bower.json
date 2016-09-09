@@ -1,6 +1,6 @@
 {
     "name": "px-datetime-range-panel",
-    "version": "0.3.0",
+    "version": "0.3.1",
     "main": [
         "px-datetime-range-panel.html"
     ],
@@ -21,8 +21,8 @@
         "polymer": "^1.6.1",
         "px-theme": "~1.1.2",
         "px-calendar-picker": "~0.4.0",
-        "px-datetime-common": "~0.6.1",
-        "px-datetime-field": "~0.4.12"
+        "px-datetime-common": "~0.6.3",
+        "px-datetime-field": "~0.5.0"
     },
     "devDependencies": {
       "px-starter-kit-design": "#~0.6.0",
