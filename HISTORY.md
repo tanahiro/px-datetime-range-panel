@@ -1,6 +1,6 @@
 v0.3.3
 ==================
-* Updated to px-calendar v0.5.4
+* fixed codepen
 
 v0.3.2
 ==================
