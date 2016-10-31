@@ -1,3 +1,7 @@
+v0.3.3
+==================
+* Updated to px-calendar v0.5.4
+
 v0.3.2
 ==================
 * Updated dependencies
