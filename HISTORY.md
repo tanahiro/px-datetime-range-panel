@@ -1,3 +1,7 @@
+v0.4.1
+==================
+* Fixed event listeners in demo page
+
 v0.4.0
 ==================
 * Updated dependencies
