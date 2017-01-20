@@ -1,3 +1,7 @@
+v0.4.5
+==================
+* Moving theming style includes and updated ghp.sh
+
 v0.4.4
 ==================
 * Update to px-demo
