@@ -1,6 +1,7 @@
 v0.4.5
 ==================
 * Moving theming style includes and updated ghp.sh
+* updated api for new colors
 
 v0.4.4
 ==================
