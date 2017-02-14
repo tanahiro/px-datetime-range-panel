@@ -8,12 +8,18 @@
 <link rel="import" href="../px-datetime-common/px-datetime-range-behavior.html"/>
 
 <!--
-Rangepicker modal component.
-
-##### Usage
+#### Usage
 
     <px-datetime-range-panel from={{...}} to={{...}}>
     </px-datetime-range-panel>
+
+#### Styling
+The following custom properties are available for styling. Please also refer to px-forms-design, px-calendar-picker, px-datetime-field, and px-datetime-common for additional style variables used by this component.
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--px-range-panel-border-color` | Border color used within the datetime range panel | `$gray4`
+`--px-range-panel-background-color` | Background color for the datetime range panel | `$white`
 
 @element px-datetime-range-panel
 @blurb Element providing solution to date time range panel.
@@ -26,7 +32,7 @@ Rangepicker modal component.
 <dom-module id="px-datetime-range-panel">
   <template>
     <style include="px-datetime-range-panel-styles"></style>
-    
+
     <div id="rangepickerModal" class="rangepicker__box inline--flex flex--col">
       <!-- Calendar + time inputs + presets -->
       <div class="flex">
