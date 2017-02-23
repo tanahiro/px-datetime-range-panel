@@ -1,3 +1,7 @@
+v0.4.7
+==================
+* fixed issue with demo page
+
 v0.4.6
 ==================
 * added styling section to API documentation
