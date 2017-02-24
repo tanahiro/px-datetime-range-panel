@@ -1,3 +1,7 @@
+v0.4.8
+==================
+* add link to Moment documentation
+
 v0.4.7
 ==================
 * fixed issue with demo page
