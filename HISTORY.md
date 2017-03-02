@@ -1,3 +1,7 @@
+v0.4.9
+==================
+* uprev
+
 v0.4.8
 ==================
 * add link to Moment documentation
