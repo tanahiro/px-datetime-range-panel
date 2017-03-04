@@ -38,14 +38,13 @@
 
       <!-- Component ---------------------------------------------------------->
       <px-demo-component>
-        <!--Figure out how to make this work with the new demo-->
-        <!--<span id="counterRange{{indexPlusOne(index)}}"><strong>px-calendar-range-selected</strong> fired <strong>0</strong> time(s)</span>
-        <br/>
-        <span id="rangeString{{indexPlusOne(index)}}">Current range object:</span>
-        <br/>
-        <template is="dom-if" if="{{item.showButtons}}">
-          <span id="buttonClicked{{indexPlusOne(index)}}">Button Clicked Action:</span>
-          <br/>-->
+        <p class=u-mb0>Event fired: <strong>px-datetime-range-submitted</strong></p>
+        <p class="zeta u-mt0">See API Reference below for more details</p>
+        <!-- <p class="u-mb++">Current range object:
+            <template is="dom-if" if="{{toBaseDate}}">
+              <strong>[[formatDate(fromBaseDate)]]</strong> To: <strong>[[formatDate(toBaseDate)]]</strong>
+            </template>
+        </p> -->
 
         <px-datetime-range-panel
             style="position: relative;"
@@ -56,7 +55,9 @@
             hide-time="{{props.hideTime.value}}"
             time-zone="{{props.timeZone.value}}"
             hidden="{{props.hidden.value}}"
-            hide-presets="{{props.hidePresets.value}}">
+            hide-presets="{{props.hidePresets.value}}"
+            from-base-date="{{fromBaseDate}}"
+            to-base-date="{{toBaseDate}}">
         </px-datetime-range-panel>
       </px-demo-component>
       <!-- END Component ------------------------------------------------------>
@@ -103,6 +104,7 @@
         type: Object,
         value: function(){ return this.demoProps; }
       },
+
 
       /**
        * An array of pre-configured `props` that can be used to provide the user
@@ -207,34 +209,12 @@
     },
 
     ready: function () {
-    //   document.addEventListener('px-calendar-range-selected', function(evt) {
-    //   counterRange++;
-    //   for(var i=1; i<=optionsArray.length; i++) {
-    //     var span = document.getElementById('counterRange'+i);
-    //     if(span){
-    //       span.innerHTML = '<strong>px-calendar-range-selected</strong> fired <strong>' + counterRange + '</strong> time(s)';
-    //     }
-    //   }
-
-    //   for(var i=1; i<=optionsArray.length; i++) {
-    //     var span2 = document.getElementById('rangeString'+i);
-    //     if(span2){
-    //       span2.innerHTML = 'Current range object: From: <strong>' + evt.detail.range.from + '</strong> To: <strong>' + evt.detail.range.to + '</strong>';
-    //     }
-    //   }
-    // });
-    //  document.addEventListener('px-datetime-button-clicked', function(evt) {
-    //   counterRange++;
-
-    //   for(var i=1; i<=optionsArray.length; i++) {
-    //     var span2 = document.getElementById('buttonClicked'+i);
-    //     if(span2){
-    //       span2.innerHTML = 'Button Clicked Action: ' + evt.detail.action;
-    //     }
-    //   }
-    // });
-
       this.linksIncludes = ['px-datetime-common/px-polygit-imports-datetime.html'];
+    },
+
+    formatDate: function(momentDate) {
+      return momentDate.toISOString();
     }
+
   });
 </script>
