@@ -38,15 +38,6 @@
 
       <!-- Component ---------------------------------------------------------->
       <px-demo-component>
-        <!--Figure out how to make this work with the new demo-->
-        <!--<span id="counterRange{{indexPlusOne(index)}}"><strong>px-calendar-range-selected</strong> fired <strong>0</strong> time(s)</span>
-        <br/>
-        <span id="rangeString{{indexPlusOne(index)}}">Current range object:</span>
-        <br/>
-        <template is="dom-if" if="{{item.showButtons}}">
-          <span id="buttonClicked{{indexPlusOne(index)}}">Button Clicked Action:</span>
-          <br/>-->
-
         <px-datetime-range-panel
             style="position: relative;"
             time-format="{{props.timeFormat.value}}"
@@ -203,37 +194,9 @@
         readonly: false
       },
 
-
     },
 
     ready: function () {
-    //   document.addEventListener('px-calendar-range-selected', function(evt) {
-    //   counterRange++;
-    //   for(var i=1; i<=optionsArray.length; i++) {
-    //     var span = document.getElementById('counterRange'+i);
-    //     if(span){
-    //       span.innerHTML = '<strong>px-calendar-range-selected</strong> fired <strong>' + counterRange + '</strong> time(s)';
-    //     }
-    //   }
-
-    //   for(var i=1; i<=optionsArray.length; i++) {
-    //     var span2 = document.getElementById('rangeString'+i);
-    //     if(span2){
-    //       span2.innerHTML = 'Current range object: From: <strong>' + evt.detail.range.from + '</strong> To: <strong>' + evt.detail.range.to + '</strong>';
-    //     }
-    //   }
-    // });
-    //  document.addEventListener('px-datetime-button-clicked', function(evt) {
-    //   counterRange++;
-
-    //   for(var i=1; i<=optionsArray.length; i++) {
-    //     var span2 = document.getElementById('buttonClicked'+i);
-    //     if(span2){
-    //       span2.innerHTML = 'Button Clicked Action: ' + evt.detail.action;
-    //     }
-    //   }
-    // });
-
       this.linksIncludes = ['px-datetime-common/px-polygit-imports-datetime.html'];
     }
   });
