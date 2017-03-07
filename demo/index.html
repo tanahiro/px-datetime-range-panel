@@ -46,7 +46,6 @@
             block-past-dates="{{props.blockPastDates.value}}"
             hide-time="{{props.hideTime.value}}"
             time-zone="{{props.timeZone.value}}"
-            hidden="{{props.hidden.value}}"
             hide-presets="{{props.hidePresets.value}}">
         </px-datetime-range-panel>
       </px-demo-component>
@@ -118,7 +117,6 @@
               blockPastDates: false,
               hideTime: false,
               timeZone: "UTC",
-              hidden: false,
               hidePresets: false
             },
 
@@ -129,7 +127,6 @@
               blockPastDates: false,
               hideTime: true,
               timeZone: "America/Los_Angeles",
-              hidden: false,
               hidePresets: true
             }
           ]
@@ -167,12 +164,6 @@
       },
 
       blockPastDates: {
-        type: Boolean,
-        defaultValue: false,
-        inputType: 'toggle'
-      },
-
-      hidden: {
         type: Boolean,
         defaultValue: false,
         inputType: 'toggle'

@@ -1,3 +1,7 @@
+v0.4.11
+==================
+* remove hidden from demo, add issue templates
+
 v0.4.10
 ==================
 * get rid of old code
