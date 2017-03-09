@@ -1,3 +1,7 @@
+v0.4.12
+==================
+* add Cloud Flare cache reset
+
 v0.4.11
 ==================
 * remove hidden from demo, add issue templates
