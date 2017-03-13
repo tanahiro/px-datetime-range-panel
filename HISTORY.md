@@ -1,3 +1,7 @@
+v0.4.13
+==================
+* converted time zone property to typeahead 
+
 v0.4.12
 ==================
 * add Cloud Flare cache reset
