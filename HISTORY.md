@@ -1,3 +1,7 @@
+v0.4.14
+==================
+* added css var for dash between time fields
+
 v0.4.13
 ==================
 * converted time zone property to typeahead 
