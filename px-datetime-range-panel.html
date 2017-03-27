@@ -26,7 +26,7 @@ Rangepicker modal component.
 <dom-module id="px-datetime-range-panel">
   <template>
     <style include="px-datetime-range-panel-styles"></style>
-    
+
     <div id="rangepickerModal" class="rangepicker__box inline--flex flex--col">
       <!-- Calendar + time inputs + presets -->
       <div class="flex">
@@ -41,7 +41,8 @@ Rangepicker modal component.
               block-future-dates="{{blockFutureDates}}"
               block-past-dates="{{blockPastDates}}"
               base-date="{{fromBaseDate}}"
-              time-zone="[[timeZone]]">
+              time-zone="[[timeZone]]"
+              day-week-start-index="[[dayWeekStartIndex]]">
               </px-calendar-picker>
             </div>
             <template is="dom-if" if="{{!_areConsecutiveMonth(fromBaseDate, toBaseDate)}}">
@@ -55,7 +56,8 @@ Rangepicker modal component.
                 block-future-dates="{{blockFutureDates}}"
                 block-past-dates="{{blockPastDates}}"
                 base-date="{{toBaseDate}}"
-                time-zone="[[timeZone]]">
+                time-zone="[[timeZone]]"
+                day-week-start-index="[[dayWeekStartIndex]]">
               </px-calendar-picker>
             </div>
           </div>
@@ -99,7 +101,7 @@ Rangepicker modal component.
           <px-datetime-buttons
             class="flex__item--bottom"
             is-submit-button-valid="[[_canApply]]"
-            submit-text="Apply">
+            submit-text="[[localize('Apply')]]">
           </px-datetime-buttons>
         </div>
       </template>
@@ -113,7 +115,8 @@ Rangepicker modal component.
     is: 'px-datetime-range-panel',
     behaviors: [
       pxDatetimeRangeBehavior,
-      pxDatetimeButtonBehavior],
+      pxDatetimeButtonBehavior,
+      pxDatetimeSharedBehavior.dayWeekStartIndex],
 
     properties: {
 
