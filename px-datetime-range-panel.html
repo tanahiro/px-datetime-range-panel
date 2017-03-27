@@ -8,12 +8,20 @@
 <link rel="import" href="../px-datetime-common/px-datetime-range-behavior.html"/>
 
 <!--
-Rangepicker modal component.
+The datetime components rely on <a href="https://momentjs.com/" target="_blank">Moment.js</a> and <a href="https://momentjs.com/timezone/" target="_blank">Moment Timezone</a>.
 
-##### Usage
+#### Usage
 
     <px-datetime-range-panel from={{...}} to={{...}}>
     </px-datetime-range-panel>
+
+#### Styling
+The following custom properties are available for styling. Please also refer to px-forms-design, px-calendar-picker, px-datetime-field, and px-datetime-common for additional style variables used by this component.
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--px-range-panel-border-color` | Border color used within the datetime range panel | `$gray4`
+`--px-range-panel-background-color` | Background color for the datetime range panel | `$white`
 
 @element px-datetime-range-panel
 @blurb Element providing solution to date time range panel.
@@ -75,7 +83,7 @@ Rangepicker modal component.
                 time-format="{{timeFormat}}"
                 time-zone="[[timeZone]]">
               </px-datetime-field>
-              <div class="flex__item--middle largeFont">-</div>
+              <div class="flex__item--middle largeFont box__dash">–</div>
               <px-datetime-field
                 id="time"
                 class="flex__item--middle u-ml- box__time"

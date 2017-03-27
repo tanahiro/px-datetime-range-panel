@@ -1,3 +1,62 @@
+v0.4.14
+==================
+* added css var for dash between time fields
+
+v0.4.13
+==================
+* converted time zone property to typeahead 
+
+v0.4.12
+==================
+* add Cloud Flare cache reset
+
+v0.4.11
+==================
+* remove hidden from demo, add issue templates
+
+v0.4.10
+==================
+* get rid of old code
+
+v0.4.9
+==================
+* uprev
+
+v0.4.8
+==================
+* add link to Moment documentation
+
+v0.4.7
+==================
+* fixed issue with demo page
+
+v0.4.6
+==================
+* added styling section to API documentation
+
+v0.4.5
+==================
+* Moving theming style includes and updated ghp.sh
+* updated api for new colors
+
+v0.4.4
+==================
+* Update to px-demo
+* removed demosass
+* Updated to cool grays
+
+v0.4.3
+==================
+* Update colors design to pick up new colors
+
+v0.4.2
+==================
+* changing ghp.sh to account for Alpha releases
+
+v0.4.1
+==================
+* Fixed event listeners in demo page
+
 v0.4.0
 ==================
 * Updated dependencies
