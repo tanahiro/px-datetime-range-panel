@@ -1,10 +1,14 @@
+v0.5.0
+==================
+* added localization and dayWeekStartIndex (controlling at which week day the calendar starts)
+
 v0.4.14
 ==================
 * added css var for dash between time fields
 
 v0.4.13
 ==================
-* converted time zone property to typeahead 
+* converted time zone property to typeahead
 
 v0.4.12
 ==================
