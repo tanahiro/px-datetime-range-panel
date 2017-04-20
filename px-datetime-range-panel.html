@@ -6,6 +6,7 @@
 <link rel="import" href="../px-datetime-common/px-datetime-imports.html"/>
 <link rel="import" href="../px-datetime-field/px-datetime-field.html"/>
 <link rel="import" href="../px-datetime-common/px-datetime-range-behavior.html"/>
+<link rel="import" href="../app-localize-behavior/app-localize-behavior.html" />
 
 <!--
 The datetime components rely on <a href="https://momentjs.com/" target="_blank">Moment.js</a> and <a href="https://momentjs.com/timezone/" target="_blank">Moment Timezone</a>.
@@ -44,13 +45,16 @@ Custom property | Description | Default
           <div class="flex flex--center">
             <div class="flex--item rangepicker__box__calendar">
               <px-calendar-picker
-              id="from"
-              hide-next-button="{{_areConsecutiveMonth(fromBaseDate, toBaseDate)}}"
-              block-future-dates="{{blockFutureDates}}"
-              block-past-dates="{{blockPastDates}}"
-              base-date="{{fromBaseDate}}"
-              time-zone="[[timeZone]]"
-              day-week-start-index="[[dayWeekStartIndex]]">
+                id="from"
+                hide-next-button="{{_areConsecutiveMonth(fromBaseDate, toBaseDate)}}"
+                block-future-dates="{{blockFutureDates}}"
+                block-past-dates="{{blockPastDates}}"
+                base-date="{{fromBaseDate}}"
+                time-zone="[[timeZone]]"
+                day-week-start-index="[[dayWeekStartIndex]]"
+                resources="[[resources]]"
+                language="[[language]]"
+                formats="[[formats]]">
               </px-calendar-picker>
             </div>
             <template is="dom-if" if="{{!_areConsecutiveMonth(fromBaseDate, toBaseDate)}}">
@@ -65,7 +69,10 @@ Custom property | Description | Default
                 block-past-dates="{{blockPastDates}}"
                 base-date="{{toBaseDate}}"
                 time-zone="[[timeZone]]"
-                day-week-start-index="[[dayWeekStartIndex]]">
+                day-week-start-index="[[dayWeekStartIndex]]"
+                resources="[[resources]]"
+                language="[[language]]"
+                formats="[[formats]]">
               </px-calendar-picker>
             </div>
           </div>
@@ -81,7 +88,10 @@ Custom property | Description | Default
                 hide-date
                 is-valid="{{_fromTimeIsValid}}"
                 time-format="{{timeFormat}}"
-                time-zone="[[timeZone]]">
+                time-zone="[[timeZone]]"
+                resources="[[resources]]"
+                language="[[language]]"
+                formats="[[formats]]">
               </px-datetime-field>
               <div class="flex__item--middle largeFont box__dash">–</div>
               <px-datetime-field
@@ -92,14 +102,23 @@ Custom property | Description | Default
                 hide-date
                 is-valid="{{_toTimeIsValid}}"
                 time-format="{{timeFormat}}"
-                time-zone="[[timeZone]]">
+                time-zone="[[timeZone]]"
+                resources="[[resources]]"
+                language="[[language]]"
+                formats="[[formats]]">
               </px-datetime-field>
             </div>
           </template>
         </div>
         <!-- the presets -->
         <template is="dom-if" if="{{!hidePresets}}">
-          <px-datetime-presets id="presets" class="flex flex--col border--left u-p+" preset-ranges="{{presetRanges}}">
+          <px-datetime-presets
+            id="presets"
+            class="flex flex--col border--left u-p+"
+            preset-ranges="{{presetRanges}}"
+            resources="[[resources]]"
+            language="[[language]]"
+            formats="[[formats]]">
           </px-datetime-presets>
         </template>
       </div>
@@ -109,7 +128,9 @@ Custom property | Description | Default
           <px-datetime-buttons
             class="flex__item--bottom"
             is-submit-button-valid="[[_canApply]]"
-            submit-text="[[localize('Apply')]]">
+            resources="[[resources]]"
+            language="[[language]]"
+            formats="[[formats]]">
           </px-datetime-buttons>
         </div>
       </template>
@@ -123,8 +144,7 @@ Custom property | Description | Default
     is: 'px-datetime-range-panel',
     behaviors: [
       pxDatetimeRangeBehavior,
-      pxDatetimeButtonBehavior,
-      pxDatetimeSharedBehavior.dayWeekStartIndex],
+      pxDatetimeButtonBehavior],
 
     properties: {
 
@@ -269,6 +289,7 @@ Custom property | Description | Default
       '_toMomentChanged(toMoment)'
     ],
     ready: function() {
+
       var fromHandler = this._fromPicked.bind(this),
           toHandler = this._toPicked.bind(this),
           presetHandler = this._presetSelected.bind(this);
