@@ -462,4 +462,45 @@ function runCustomTests() {
       assert.isTrue(rangePanel.toMoment.isSame(endOfMonth, 'day'));
     });
   });
+
+  suite('select last 10 minutes presets', function(done) {
+
+    var now = moment.tz(moment(), rangePanel.timeZone);
+        startDateTime = now.clone().subtract(10, 'minutes'),
+        endDateTime = now.clone();
+
+    suiteSetup(function(done) {
+
+      //set old calendars
+      rangePanel.fromBaseDate = rangePanel._convertISOtoMoment("2011-06-02T00:00:00Z");
+      rangePanel.toBaseDate = rangePanel._convertISOtoMoment("2012-07-11T00:00:00Z");
+
+      flush(function() {
+
+        //now simulate 'last month' preset selection
+        rangePanel.dispatchEvent(new CustomEvent('px-preset-selected',
+                    { 'detail':  {
+                      "displayText": "Last Month",
+                      "startDateTime": startDateTime,
+                      "endDateTime": endDateTime
+                    }}));
+        flush(function() {
+          done();
+        });
+      });
+    });
+
+    test('shows appropriate calendars', function() {
+
+      assert.isTrue(rangePanel.fromBaseDate.isSame(startDateTime, 'month'));
+      assert.isTrue(rangePanel.toBaseDate.isSame(endDateTime.clone().add(1, 'month'), 'month'));
+    });
+
+    test('moments have been updated', function() {
+
+      assert.isTrue(rangePanel.fromMoment.isSame(startDateTime, 'second'));
+      assert.isTrue(rangePanel.toMoment.isSame(endDateTime.startOf('second')), 'second');
+    });
+  });
+
 };

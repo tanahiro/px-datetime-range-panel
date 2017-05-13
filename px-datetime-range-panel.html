@@ -340,7 +340,7 @@ Custom property | Description | Default
       if(startOk) {
         this.$.from.fromMoment = start.clone();
         this.$.to.fromMoment = start.clone();
-        this.set('fromMoment', this._preserveTime(this.fromMoment, start.clone()));
+        this.set('fromMoment', start.clone());
 
       } else {
         //start date is not ok but end is, it means we're blocking past date. Set start date to today
@@ -355,7 +355,7 @@ Custom property | Description | Default
       if(endOk) {
         this.$.from.toMoment = end.clone();
         this.$.to.toMoment = end.clone();
-        this.set('toMoment', this._preserveTime(this.toMoment, end.clone()));
+        this.set('toMoment', end.clone());
       } else {
         //end date is not ok but start is, it means we're blocking future date. Set end date to today
         if(startOk) {
